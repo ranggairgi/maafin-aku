@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Maafin Aku 🙈</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff0f5;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: none;
+        }
+        .container.show {
+            opacity: 1;
+            display: block;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #ff7eb3;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff4b91;
+        }
+        #noButton {
+            position: relative;
+        }
+        .hujan {
+            position: fixed;
+            top: -50px;
+            font-size: 30px;
+            animation: jatuh 4s linear forwards;
+            z-index: 1000;
+        }
+        @keyframes jatuh {
+            to {
+                transform: translateY(120vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        #gambarKucing {
+            width: 150px;
+            display: none;
+            margin: 10px auto 0 auto;
+            transition: transform 0.5s ease;
+        }
+        #gambarKucing:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        @media(max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Halaman Landing -->
+    <div id="landingPage" class="container show">
+        <h1>🙏 Permintaan Maaf</h1>
+        <button onclick="masuk()">Masuk</button>
+    </div>
+
+    <!-- Halaman Permintaan Maaf -->
+    <div id="maafPage" class="container">
+        <h1>🥺 Tolong Maafin Aku Ya Bakso...</h1>
+        <p>Aku tau aku salah udah cuekin kamu... 😭</p>
+        <p style="font-size: 14px; color: gray;">Dari aku yang suka ngilang... 🥺</p>
+        <div class="buttons">
+            <button onclick="munculkanHujan()">Udah Maafin</button>
+            <button id="noButton" onmousedown="kabur()">Nggak!</button>
+        </div>
+        
+        <!-- Pesan akhir di bawah tombol -->
+        <p id="pesanAkhir" style="display:none; font-size:20px; color:#ff4b91; margin-top:20px;">
+            Makasih Udah Maafin Aku Cantik! 🥰
+        </p>
+
+        <!-- Gambar kucing -->
+        <img id="gambarKucing" src="gambar_kucing.jpg" alt="Kucing Bawa Bunga">
+
+        <!-- Tombol Balas -->
+        <button id="balasButton" style="display:none; margin-top:10px;" onclick="bukaTelegram()">
+            Balas Pesan ❤️
+        </button>
+    </div>
+
+    <!-- Musik mellow -->
+    <audio id="musikSedih" src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" loop></audio>
+
+    <script>
+        function masuk() {
+            const landing = document.getElementById('landingPage');
+            landing.classList.remove('show');
+            
+            setTimeout(() => {
+                landing.style.display = 'none';
+                const maafPage = document.getElementById('maafPage');
+                maafPage.style.display = 'block';
+                setTimeout(() => {
+                    maafPage.classList.add('show');
+                }, 10);
+                
+                // Memainkan musik
+                document.getElementById('musikSedih').play().catch(e => console.log(e));
+            }, 500);
+        }
+
+        function kabur() {
+            const button = document.getElementById('noButton');
+            const container = document.querySelector('.container');
+
+            const maxX = container.clientWidth - button.clientWidth;
+            const maxY = container.clientHeight - button.clientHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            button.style.position = 'absolute';
+            button.style.left = randomX + 'px';
+            button.style.top = randomY + 'px';
+        }
+
+        function munculkanHujan() {
+            const totalItem = 50;
+
+            // Tampilkan elemen-elemen
+            document.getElementById('pesanAkhir').style.display = 'block';
+            document.getElementById('gambarKucing').style.display = 'block';
+            document.getElementById('balasButton').style.display = 'inline-block';
+
+            // Buat animasi hujan
+            for (let i = 0; i < totalItem; i++) {
+                const elemen = document.createElement('div');
+                elemen.classList.add('hujan');
+
+                const pilihan = ['❤️', '🌸'];
+                elemen.innerHTML = pilihan[Math.floor(Math.random() * pilihan.length)];
+
+                elemen.style.left = Math.random() * 100 + 'vw';
+                elemen.style.fontSize = (20 + Math.random() * 20) + 'px';
+
+                document.body.appendChild(elemen);
+
+                setTimeout(() => {
+                    elemen.remove();
+                }, 4000);
+            }
+        }
+
+        function bukaTelegram() {
+            // Ganti 'username_telegram_anda' dengan username Telegram Anda (tanpa @)
+            const username = 'irgi3424';
+            
+            // Pesan default yang akan dikirim
+            const pesan = encodeURIComponent('Aku udah maafin kamu kok ❤️');
+            
+            // Membuka chat Telegram
+            window.open(`https://t.me/${username}?text=${pesan}`, '_blank');
+            
+            // Fallback untuk mobile jika tidak terbuka otomatis
+            setTimeout(() => {
+                window.location.href = `tg://resolve?domain=${username}&text=${pesan}`;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
